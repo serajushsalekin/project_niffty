@@ -1,0 +1,15 @@
+*.pyc
+__pycache__/
+db.sqlite3
+.idea
+.idea/*
+**/migrations/
+**/migrations/*
+**/**/migrations/
+.env
+.venv
+env/
+env/*
+venv/
+ENV/
+
