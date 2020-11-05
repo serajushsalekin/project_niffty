@@ -5,9 +5,27 @@ class App extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
+            inp: 0,
             output: null,
             history: null
         }
+    }
+    onChange = e => {
+        this.setState({
+            ...this.state,
+            inp: e.target.value
+        })
+    }
+    handleOperation = method => {
+        const {inp} = this.state
+        axios.get(`http://127.0.0.1:8000/?op_name=${method}&&value=${inp}`)
+            .then(res => {
+                this.setState({
+                    ...this.state,
+                    output: res.data
+                })
+            })
+            .catch(err => err)
     }
     retriveHistory = e => {
         let value = ''
@@ -45,18 +63,29 @@ class App extends React.Component{
               <div className="align-items-center justify-content-between col-sm-5 col-md-6 d-flex flex-column">
                   <div className={'d-flex flex-column'}>
                       <label className={'form-label'}>Input</label>
-                      <input className={'form-control'} type={'text'} />
+                      <input
+                          onChange={e => this.onChange(e)}
+                          className={'form-control'}
+                          type={'text'} />
                   </div>
                   <div className={'d-flex flex-column'}>
                       <label className={'form-label'}>Output</label>
-                      <textarea className={'form-control'} rows="2" value={'10'}> </textarea>
+                      <textarea className={'form-control'} rows="2" defaultValue={this.state.output} />
                   </div>
               </div>
               <div className="col-sm-5 col-md-6 d-flex flex-column justify-content-between">
-                  <button className={'btn btn-secondary btn-lg btn-light border-dark m-1'}>sq</button>
-                  <button className={'btn btn-secondary btn-lg btn-light border-dark m-1'}>sqrt</button>
-                  <button className={'btn btn-secondary btn-lg btn-light border-dark m-1'}>fact</button>
-                  <button className={'btn btn-secondary btn-lg btn-light border-dark m-1'}>fibbo</button>
+                  <button
+                      onClick={()=> this.handleOperation('sq')}
+                      className={'btn btn-secondary btn-lg btn-light border-dark m-1'}>sq</button>
+                  <button
+                      onClick={()=> this.handleOperation('sqrt')}
+                      className={'btn btn-secondary btn-lg btn-light border-dark m-1'}>sqrt</button>
+                  <button
+                      onClick={()=> this.handleOperation('fact')}
+                      className={'btn btn-secondary btn-lg btn-light border-dark m-1'}>fact</button>
+                  <button
+                      onClick={()=> this.handleOperation('fibbo')}
+                      className={'btn btn-secondary btn-lg btn-light border-dark m-1'}>fibbo</button>
               </div>
           </div>
       </div>
@@ -80,7 +109,7 @@ class App extends React.Component{
      </div>
     </div>
     {this.state.history ? this.state.history.map(h =>
-        (<div
+        (<div key={h.id}
             className="container m-5 d-flex justify-content-center table-secondary"
         >
             Operation Name: {h.operation_name} | Time: {new Date(h.time).toString()}
