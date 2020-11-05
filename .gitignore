@@ -12,4 +12,6 @@ env/
 env/*
 venv/
 ENV/
+/node_modules
+node_modules/
 
